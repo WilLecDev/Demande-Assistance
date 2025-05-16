@@ -1,11 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import db from './config/db.js';
+import procedureRoutes from './routes/procedures.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use('/api/procedures', procedureRoutes);
 
 app.get('/', (req, res) => {
   db.query('SELECT NOW()', (err, result) => {
