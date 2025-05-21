@@ -1,4 +1,3 @@
-// controllers/proceduresControllers.js
 import db from '../config/db.js';
 
 export const createProcedures = async (req, res) => {
