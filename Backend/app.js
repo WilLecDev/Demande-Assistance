@@ -9,13 +9,15 @@ app.use(express.json());
 app.use(cors());
 app.use('/api/procedures', procedureRoutes);
 
-app.get('/', (req, res) => {
-  db.query('SELECT NOW()', (err, result) => {
-    if (err) return res.status(500).json({ error: 'Database connection error' });
-    res.json({ message: 'Database connected', date: result[0].now });
-  });
+app.get('/', async (req, res) => {
+  try {
+    const [result] = await db.query('SELECT NOW()');
+    res.json({ message: 'Database connected', date: result[0]['NOW()'] });
+  } catch (err) {
+    res.status(500).json({ error: 'Database connection error' });
+  }
 });
 
-app.listen(3000, () => { 
+app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });

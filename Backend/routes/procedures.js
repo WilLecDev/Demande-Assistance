@@ -1,8 +1,8 @@
 import express from 'express';
-import { createprocedures } from '../controllers/proceduresControllers.js';
+import { createProcedures } from '../controllers/proceduresControllers.js'; 
 
 const router = express.Router();
 
-router.post('/', createprocedures);
+router.post('/', createProcedures); 
 
 export default router;
