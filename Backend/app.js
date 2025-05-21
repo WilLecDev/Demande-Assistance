@@ -3,6 +3,7 @@ import cors from 'cors';
 import db from './config/db.js';
 import procedureRoutes from './routes/procedures.js';
 import processRoutes from './routes/process.js';
+import historiqueRoutes from './routes/historique.js';
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/api/procedures', procedureRoutes);
 app.use('/api/process', processRoutes);
+app.use('/api/historique', historiqueRoutes);
 
 app.get('/', async (req, res) => {
   try {
