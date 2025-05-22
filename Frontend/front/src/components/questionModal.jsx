@@ -12,7 +12,7 @@ export default function QuestionModal({ onClose, onSave }) {
         setOptions(updated);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const newQuestion = {
             is_question: true,
             question_text: questionText,
@@ -24,11 +24,33 @@ export default function QuestionModal({ onClose, onSave }) {
             followup_question_text: null,
             followup_question_type: null,
             position: 0,
-            procedures_id: null,
+            procedures_id: 1,
             options: questionType === "qcu" ? options.filter((opt) => opt) : null,
         };
-        onSave(newQuestion);
+
+        try {
+            const response = await fetch('http://localhost:3000/api/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newQuestion),
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de l\'enregistrement de la question');
+            }
+            const savedQuestion = await response.json();
+            console.log("Question enregistrée :", savedQuestion);
+            if (onSave) {
+                onSave(newQuestion);
+            }
+            
+    } catch (error) {
+            console.error("Erreur :", error);
+            alert("Erreur lors de l'enregistrement de la question !");
     }
+    };
 
     return (
         <div className="modal">
