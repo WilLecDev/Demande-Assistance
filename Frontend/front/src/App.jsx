@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import QuestionModal from './components/questionModal.jsx'
+import ActionModal from './components/actionModal.jsx'
 import './App.css'
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <div>
-       <QuestionModal/>
+       <ActionModal/>
       </div>
     </>
   )
