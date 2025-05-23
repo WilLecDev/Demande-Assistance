@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ProcessList from './components/processList.jsx'
+import CanvasProcedure from './components/canvasProcedure.jsx'
 import './App.css'
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <div>
-       <ProcessList/>
+       <CanvasProcedure/>
       </div>
     </>
   )
