@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ProcedurePage from './page/procedurePage.jsx'
+import VisualBuilder from './components/visualBuilder.jsx'
 import './App.css'
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <div>
-       <ProcedurePage/>
+       <VisualBuilder/>
       </div>
     </>
   )

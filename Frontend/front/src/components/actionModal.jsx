@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./styles/actionModal.css";
 
 export default function ActionModal({ onClose, onSave }) {
     const [description, setDescription] = useState("");

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 //import CreateProcedureModal from "../components/CreateProcedureModal";
 import ProcessList from "../components/processList.jsx";
 import ProcedureCanvas from "../components/canvasProcedure.jsx";
+import "../styles/procedurePage.css";
 
 export default function ProcedurePage() {
   const [showModal, setShowModal] = useState(false);
