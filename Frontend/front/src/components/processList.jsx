@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import { fetchItems, addQuestion, addAction } from "../api/api.js";
 import ActionModal from "./actionModal.jsx";
 import QuestionModal from "./questionModal.jsx";
 
@@ -10,26 +9,51 @@ export default function ProcessList() {
     const [filter, setFilter] = useState({ question: true, action: true });
     const [search, setSearch] = useState("");
 
-    const loadData = async () => {
-        const res = await fetchItems();
-        setItems(res.data);
+    const fetchItems = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/process");
+      const data = await res.json();
+      setItems(data);
+    } catch (error) {
+      console.error("Erreur lors du chargement des éléments :", error);
+    }
+  };
+
+    const addQuestion = async (question) => {
+        try {
+            await fetch("http://localhost:3000/api/process", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(question),
+            });
+            setShowQuestionModal(false);
+            fetchItems();
+        } catch (error) {
+            console.error("Erreur lors de l'ajout de la question :", error);
+        }
+    };
+
+    const addAction = async (action) => {
+        try {
+            await fetch("http://localhost:3000/api/process", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(action),
+            });
+            setShowActionModal(false);
+            fetchItems();
+        } catch (error) {
+            console.error("Erreur lors de l'ajout de l'action :", error);
+        }
     };
 
     useEffect(() => {
-        loadData();
+        fetchItems();
     }, []);
-
-    const handleAddAction = async (action) => {
-        await addAction(action);
-        setShowActionModal(false);
-        loadData();
-    };
-
-    const handleAddQuestion = async (question) => {
-        await addQuestion(question);
-        setShowQuestionModal(false);
-        loadData();
-    };
 
     const filteredItems = items.filter((item) => {
         const matchesTypes =
@@ -44,7 +68,7 @@ export default function ProcessList() {
     return(
         <div className="ridebar">
             <div className="ridebar-flex">
-                <h2>Elements</h2>
+                <h2>Process</h2>
                 <div className="button">
                     <button onClick={() => setShowActionModal(true)}>Ajouter une Action</button>
                     <button onClick={() => setShowQuestionModal(true)}>Ajouter une Question</button>
@@ -77,13 +101,18 @@ export default function ProcessList() {
         </div>
         <ul>
             {filteredItems.map((item, idx) => (
-                <li key={idx}>
+                <li key={idx}
+                draggable
+                onDragStart={(e) => {
+                    e.dataTransfer.setData("application/json", JSON.stringify(item));
+                }}
+                >
                     <strong>{item.type === "question" ? "?" : "⚙️"}</strong> {item.title || item.description}
                 </li>
             ))}
         </ul>
-        {showActionModal && <ActionModal onClose={() => setShowActionModal(false)} onAdd={handleAddAction} />}
-        {showQuestionModal && <QuestionModal onClose={() => setShowQuestionModal(false)} onAdd={handleAddQuestion} />}
+        {showActionModal && <ActionModal onClose={() => setShowActionModal(false)} onAdd={addAction} />}
+        {showQuestionModal && <QuestionModal onClose={() => setShowQuestionModal(false)} onAdd={addQuestion} />}
         </div>
         );
 };
