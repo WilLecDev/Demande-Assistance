@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import ActionModal from "./actionModal.jsx";
 import QuestionModal from "./questionModal.jsx";
+import "../styles/processList.css";
 
 export default function ProcessList() {
     const [items, setItems] = useState([]);

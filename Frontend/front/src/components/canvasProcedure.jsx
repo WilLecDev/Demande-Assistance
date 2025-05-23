@@ -1,5 +1,6 @@
 import React from "react";
 import { useDrop } from "react-dnd";
+import "../styles/canvasProcedure.css";
 
 export default function CanvasProcedure({ procedure = { steps: [] }, setProcedure}) {
   const [, dropRef] = useDrop({

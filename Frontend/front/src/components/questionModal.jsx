@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/questionModal.css";
 
 export default function QuestionModal({ onClose, onSave }) {
     const [questionType, setQuestionType] = useState("yesno");
