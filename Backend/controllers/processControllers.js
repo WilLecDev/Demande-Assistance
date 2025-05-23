@@ -61,3 +61,15 @@ export const createProcess = async (req, res) => {
         res.status(500).json({ success: false, message: 'Erreur serveur', error: error.message });
     }
 };
+
+export const getAllProcess = async (req, res) => {
+    try {
+        const [process] = await db.query(
+            `SELECT * FROM process`
+        );
+        res.json(process);
+    } catch (error) {
+        console.error('Erreur lors de la récupération :', error.message);
+        res.status(500).json({ success: false, message: 'Erreur serveur' });
+    }
+};
