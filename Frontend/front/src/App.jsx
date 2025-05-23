@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ActionModal from './components/actionModal.jsx'
+import ProcessList from './components/processList.jsx'
 import './App.css'
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <div>
-       <ActionModal/>
+       <ProcessList/>
       </div>
     </>
   )
