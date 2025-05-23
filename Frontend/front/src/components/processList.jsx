@@ -9,31 +9,71 @@ export default function ProcessList() {
     const [filter, setFilter] = useState({ question: true, action: true });
     const [search, setSearch] = useState("");
 
-    const fetchItems = async () => {
+   const fetchItems = async () => {
     try {
       const res = await fetch("http://localhost:3000/api/process");
       const data = await res.json();
-      setItems(data);
+      console.log("Data fetched:", data);
+
+      const transformed = data.map((item) => {
+        let type = "";
+        let title = "";
+        let description = "";
+
+        if (item.is_question) {
+          type = "question";
+          title = item.question_text || "";
+          description = item.question_type || "";
+        } else if (item.is_action) {
+          type = "action";
+          title = item.action_description || "";
+          description = item.action_result ? "Succès" : "Échec";
+        }
+
+        return {
+          ...item,
+          type,
+          title,
+          description
+        };
+      });
+
+      setItems(transformed);
     } catch (error) {
       console.error("Erreur lors du chargement des éléments :", error);
     }
-  };
+};
+
 
     const addQuestion = async (question) => {
-        try {
-            await fetch("http://localhost:3000/api/process", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(question),
-            });
-            setShowQuestionModal(false);
-            fetchItems();
-        } catch (error) {
-            console.error("Erreur lors de l'ajout de la question :", error);
-        }
+  try {
+    const res = await fetch("http://localhost:3000/api/process", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(question),
+    });
+    
+    if (!res.ok) throw new Error("Erreur lors de l'ajout");
+
+    const result = await res.json();
+
+    const newItemQuestion = {
+      ...question,
+      id: result.id,        
+      type: "question",
+      title: question.question_text || "",
+      description: question.question_type || "",
     };
+
+    setItems((prevItems) => [...prevItems, newItemQuestion]);
+    setShowQuestionModal(false);
+  } catch (error) {
+    console.error("Erreur lors de l'ajout de la question :", error);
+  }
+};
+
 
     const addAction = async (action) => {
         try {
@@ -44,12 +84,24 @@ export default function ProcessList() {
                 },
                 body: JSON.stringify(action),
             });
-            setShowActionModal(false);
+            const result = await res.json();
+            if (!res.ok) throw new Error("Erreur lors de l'ajout");
             fetchItems();
+
+            const newItemAction = {
+            ...action,
+            id: result.id,        
+            type: "action",
+            title: question.question_text || "",
+            description: question.question_type || "",
+            };
+            setItems((prevItems) => [...prevItems, newItemAction]);
+            setShowActionModal(false);
         } catch (error) {
             console.error("Erreur lors de l'ajout de l'action :", error);
         }
     };
+
 
     useEffect(() => {
         fetchItems();
@@ -60,8 +112,9 @@ export default function ProcessList() {
             (item.type === "question" && filter.question) ||
             (item.type === "action" && filter.action);
         const matchesSearch =
-            item.title.toLowerCase().includes(search.toLowerCase()) ||
-            item.description.toLowerCase().includes(search.toLowerCase());
+            (item.title || "").toLowerCase().includes(search.toLowerCase()) ||
+            (item.description || "").toLowerCase().includes(search.toLowerCase())
+
         return matchesTypes && matchesSearch;
     });
 
