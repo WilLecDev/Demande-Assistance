@@ -1,8 +1,9 @@
 import express from 'express';
-import { createProcess } from '../controllers/processControllers.js';
+import { createProcess, getAllProcess } from '../controllers/processControllers.js';
 
 const router = express.Router();
 
 router.post('/', createProcess);
+router.get('/', getAllProcess);
 
 export default router;
